@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Ville;
 use AppBundle\Form\VilleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -27,7 +28,7 @@ class MeteoController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             // récupération des données envoyées par le formulaire (ici: la ville)
             $data = $form->getData();
-            $ville = $data->getNom();
+            $ville = $data->getVilleNom();
 
             // récupération des données météo
             $meteo = $this->getMeteo('meteo', $ville);
@@ -48,8 +49,8 @@ class MeteoController extends Controller
     /**
      * récupère les infos météo via l'api OpenWeatherMap
      *
-     * @param $type
-     * @param $ville
+     * @param $type -> type de données possibles de l'api OpenWeatherMap
+     * @param $ville - nom de la ville
      *
      * @return bool|mixed|string
      */
@@ -60,14 +61,20 @@ class MeteoController extends Controller
         $unit = $this->getParameter('unit');
         $lang = $this->getParameter('lang');
 
-        // cr"ation de l'url en fonction du type de données que l'on veut
+        //recupere la ville en BDD
+        $ville = $this->getDoctrine()->getRepository(Ville::class)->findOneBy(array("villeNom" => $ville));
+        if(!$ville){
+            throw $this->createNotFoundException("Cette ville n'existe pas...");
+        }
+
+        // creation de l'url en fonction du type de données que l'on veut
         $url = "";
         if($type == "meteo"){
-            $url = "https://api.openweathermap.org/data/2.5/weather?q=". $ville ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang;
+            $url = "https://api.openweathermap.org/data/2.5/weather?q=". $ville->getVilleNom() ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang;
         }
         if($type == "forecast"){
             $cnt = 9;
-            $url = "https://api.openweathermap.org/data/2.5/forecast?q=". $ville ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang ."&cnt=". $cnt;
+            $url = "https://api.openweathermap.org/data/2.5/forecast?q=". $ville->getVilleNom() ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang ."&cnt=". $cnt;
         }
 
         // vérifie si l'url existe (sinon 404)

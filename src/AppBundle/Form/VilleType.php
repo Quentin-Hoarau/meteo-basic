@@ -13,7 +13,7 @@ class VilleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom', null, array('attr' => array(
+        $builder->add('villeNom', null, array('attr' => array(
                                                                 'class' => 'mx-sm-3')
         ));
     }/**
