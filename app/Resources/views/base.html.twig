@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}Basic-Meteo{% endblock %}</title>
+
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/fontawesome-all.css') }}">
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div class="container">
+        {% block body %}{% endblock %}
+
+            <div class="alert alert-dark">
+                choses à terminer:
+                <ul>
+                    <li>faire une BDD de toutes les villes de france</li>
+                    <li>faire un ajax qui cherche les villes correspondantes à partir de 3 lettres écrites dans le input</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="{{ asset('js/bootstrap.js') }}"></script>
+        <script src="{{ asset('js/arrow-rotation.js') }}"></script>
+        <script src="{{ asset('js/forecast-graphic.js') }}"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

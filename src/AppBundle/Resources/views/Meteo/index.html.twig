@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+
+<div class="mx-auto my-5 py-2 border rounded">
+    <form class="form-inline justify-content-center" method="post">
+        <div class="form-group">
+        {{ form_widget(form) }}
+        </div>
+    <button type="submit" class="btn btn-primary">Valider</button>
+    {{ form_end(form) }}
+</div>
+
+{% if meteo is defined %}
+<h1>Météo à {{ meteo.name }}</h1>
+
+<div id="forecast_datas" class="d-none" data-forecast="{{ forecast }}"></div>
+
+<div class="row">
+    <div class="card col-md-3">
+        <img class="card-img-top h-25 w-50 mx-auto" src="http://openweathermap.org/img/w/{{ meteo.weather.0.icon }}.png" alt="Card image cap">
+        <h5 class="card-title mx-auto">{{ meteo.weather.0.description }}</h5>
+        <div class="card-body my-0">
+            <hr />
+            <b>Température: </b> {{ meteo.main.temp }} <br />
+            <b>Pression: </b> {{ meteo.main.pressure }} <br />
+            <b>Humidité: </b> {{ meteo.main.humidity }} <br />
+
+            <hr />
+
+            <b>Vent: </b> {{ (meteo.wind.speed * 3.6)|round }} Km/h - <i class="fa fa-arrow-up" data-rotate="{{ meteo.wind.deg }}"></i>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div id="forecast_container"></div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
