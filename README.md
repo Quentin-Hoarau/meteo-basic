@@ -1,3 +1,5 @@
+Application météo pour les villes françaises.
+
 Reste à faire
 ========================
 
