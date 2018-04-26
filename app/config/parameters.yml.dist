@@ -17,3 +17,11 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
+
+    # infos de OpenWeatherMap API
+    api_key: '331a72175d735d37f8d5c787f4f2966e'
+    unit: "metric"
+    lang: "fr"
+
+    # infos de GoogleMaps API
+    google_map_api_key: 'AIzaSyDmAaPP8TmpuqaCCekkiaoyqrq_4-mQ2JE'

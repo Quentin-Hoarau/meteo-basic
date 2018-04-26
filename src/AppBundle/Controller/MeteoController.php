@@ -8,6 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
 class MeteoController extends Controller
 {
     /**
@@ -28,16 +33,29 @@ class MeteoController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             // récupération des données envoyées par le formulaire (ici: la ville)
             $data = $form->getData();
-            $ville = $data->getVilleNom();
+            $villeNom = $data->getVilleNom();
+
+            //recupere la ville en BDD
+            $ville = $this->getDoctrine()->getRepository(Ville::class)->findOneBy(array("villeNom" => $villeNom));
+            if(!$ville){
+                throw $this->createNotFoundException("Cette ville n'existe pas...");
+            }
+
+            $encoders = array(new XmlEncoder(), new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+
+            $serializer = new Serializer($normalizers, $encoders);
+            $jsonContent = $serializer->serialize($ville, 'json');
 
             // récupération des données météo
-            $meteo = $this->getMeteo('meteo', $ville);
-            $forecast = $this->getMeteo('forecast', $ville);
+            $meteo = $this->getMeteo('meteo', $ville->getVilleNom());
+            $forecast = $this->getMeteo('forecast', $ville->getVilleNom());
 
             return $this->render('@App\Meteo\index.html.twig', array(
                 "meteo" => $meteo,
                 "forecast" => $forecast,
-                "form" => $form->createView()
+                "form" => $form->createView(),
+                "ville" => $jsonContent,
             ));
         }
 
@@ -61,20 +79,14 @@ class MeteoController extends Controller
         $unit = $this->getParameter('unit');
         $lang = $this->getParameter('lang');
 
-        //recupere la ville en BDD
-        $ville = $this->getDoctrine()->getRepository(Ville::class)->findOneBy(array("villeNom" => $ville));
-        if(!$ville){
-            throw $this->createNotFoundException("Cette ville n'existe pas...");
-        }
-
         // creation de l'url en fonction du type de données que l'on veut
         $url = "";
         if($type == "meteo"){
-            $url = "https://api.openweathermap.org/data/2.5/weather?q=". $ville->getVilleNom() ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang;
+            $url = "https://api.openweathermap.org/data/2.5/weather?q=". $ville ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang;
         }
         if($type == "forecast"){
             $cnt = 9;
-            $url = "https://api.openweathermap.org/data/2.5/forecast?q=". $ville->getVilleNom() ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang ."&cnt=". $cnt;
+            $url = "https://api.openweathermap.org/data/2.5/forecast?q=". $ville ."&appid=". $api_key ."&units=". $unit ."&lang=". $lang ."&cnt=". $cnt;
         }
 
         // vérifie si l'url existe (sinon 404)

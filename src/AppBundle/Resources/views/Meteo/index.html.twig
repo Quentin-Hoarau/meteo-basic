@@ -2,6 +2,14 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 300px;
+            width: 100%;
+        }
+    </style>
 
 <div class="mx-auto my-5 py-2 border rounded">
     <form class="form-inline justify-content-center" method="post">
@@ -15,7 +23,7 @@
 {% if meteo is defined %}
 <h1>Météo à {{ meteo.name }}</h1>
 
-<div id="forecast_datas" class="d-none" data-forecast="{{ forecast }}"></div>
+<div id="forecast_datas" class="d-none" data-forecast="{{ forecast }}" data-ville="{{ ville }}"></div>
 
 <div class="row">
     <div class="card col-md-3">
@@ -36,7 +44,21 @@
     <div class="col-md-9">
         <div id="forecast_container"></div>
     </div>
+
+    <div id="map" class="col-md-6"></div>
+
+    <div class="col-md-6">
+        <div id="pression_container"></div>
+    </div>
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block javascripts %}
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key={{ gmap_apikey }}&callback=initMap">
+    </script>
+
+    <script src="{{ asset('js/gmap.js') }}"></script>
 {% endblock %}

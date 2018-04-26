@@ -10,6 +10,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: ThisTokenIsNotSoSecretChangeIt
-    api_key: '331a72175d735d37f8d5c787f4f2966e'
-    unit: "metric"
-    lang: "fr"
+    api_key: 331a72175d735d37f8d5c787f4f2966e
+    unit: metric
+    lang: fr
+    google_map_api_key: AIzaSyDmAaPP8TmpuqaCCekkiaoyqrq_4-mQ2JE

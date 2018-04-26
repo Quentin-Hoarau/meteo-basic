@@ -36,6 +36,8 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+        gmap_apikey: '%google_map_api_key%'
 
 # Doctrine Configuration
 doctrine:

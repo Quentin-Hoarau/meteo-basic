@@ -2,6 +2,8 @@
 var forecast_city_name = $('#forecast_datas').data('forecast').city.name;
 var forecast_datas_list = $('#forecast_datas').data('forecast').list;
 
+console.log(forecast_datas_list);
+
 // organisation des données a mettre dans le graphiques des températures
 categories_array = [];
 temperature_array = [];
